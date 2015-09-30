@@ -1,0 +1,8 @@
+require 'twitter'
+require_relative 'keys.rb'
+
+TWITTER_KEY ||= ENV["TWITTER_KEY"]
+TWITTER_SECRET ||= ENV["TWITTER_SECRET"]
+ACCESS_TOKEN ||= ENV["ACCESS_TOKEN"]
+ACCESS_SECRET ||= ENV["ACCESS_SECRET"]
+
