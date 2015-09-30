@@ -44,10 +44,65 @@ class EmojiScene
     @emoji_array[number]
   end
 
+  def get_evenly_distributed_slot_two(array)
+    available = array.each_index.select{|slot| array[slot] == ' '}
+    taken = array.each_index.reject{|slot| array[slot] == ' '}
+
+    return rand(array.length) unless taken.any?
+
+    scores = {
+
+    }
+
+    available.each do |slot|
+      lower = slot - 1
+      lower = 0 if lower < 0
+      higher = slot + 1
+      higher = 10 if higher > 10
+
+      if array[lower] == " " && array[lower] == " "
+        scores[slot] = 0 unless scores[slot]
+        scores[slot] += 5 
+      end
+
+      if array[lower - 1] == " " && array[lower] == " "
+        scores[slot] = 0 unless scores[slot]
+        scores[slot] += 5 
+      end
+
+    end
+
+  end
+
+  def get_evenly_distributed_slot(array)
+    available = array.each_index.select{|slot| array[slot] == ' '}
+    taken = array.each_index.reject{|slot| array[slot] == ' '}
+    slot = available.detect{|slot| array[slot + 3] == " " && array[slot - 3] == " " }
+    slot = available.detect{|slot| array[slot + 2] == " " && array[slot - 2] == " " } unless slot
+    slot = available.detect{|slot| array[slot + 1] == " " && array[slot - 1] == " " } unless slot 
+    slot = available.sample unless slot 
+    slot
+  end
+
+  def evenly_distribute(array, emoji)
+    slot = get_evenly_distributed_slot(array)
+    array[slot] = emoji
+  end
+
   def place_in_random_cell(array, emoji)
     return unless array.include?(" ")
-    slots = array.each_index.select{|slot| array[slot] == ' '}
-    array[slots.sample] = emoji
+    slot = get_evenly_distributed_slot(array)
+    array[slot] = emoji
+    # get_evenly_distributed_slot(array)
+    # slots = array.each_index.select{|slot| array[slot] == ' '}
+    # taken = array.each_index.reject{|slot| array[slot] == ' '}
+    # if slots.include?(0) && slots.include?(1)
+    #   array[rand(0..1)] = emoji
+    # elsif slots.include?(@LINE_LENGTH - 1) && slots.include?(@LINE_LENGTH - 2)
+    #   array[rand(@LINE_LENGTH - 2..@LINE_LENGTH-1)] = emoji
+    # else 
+    #   array[slots.sample] = emoji
+    # end
   end
 
   def fill_row_randomly(row_number, emoji_set)
@@ -55,7 +110,7 @@ class EmojiScene
   end
 
   def fill_row_slightly(row_number, emoji_set)
-    rand(1..3).times { place_in_random_cell(row(row_number), @dict.get_random(emoji_set)) }
+    rand(2..4).times { place_in_random_cell(row(row_number), @dict.get_random(emoji_set)) }
   end
 
   def fill_row_totally(row_number, emoji_or_category)
