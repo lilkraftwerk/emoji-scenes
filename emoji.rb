@@ -1,5 +1,4 @@
 require_relative 'custom_twitter'
-require 'pry'
 
 class EmojiArrayTools
 
@@ -265,8 +264,9 @@ def random_scene
 end
 
 def tweet
+  scene_to_do = random_scene
   scene = EmojiScene.new
-  scene.send(random_scene)
+  scene.send(scene_to_do)
   scene.print
   puts scene_to_do
   twit = CustomTwitter.new
@@ -280,3 +280,5 @@ def test_scene(name = :random)
   scene.print
   puts scene_to_do
 end
+
+tweet
