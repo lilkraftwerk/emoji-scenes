@@ -258,6 +258,8 @@ class EmojiScene
   end
 end
 
+scenes = [:space_scene, :ocean_scene, :city_scene, :beach_scene, :forest_scene, :winter_scene]
+
 # scene = EmojiScene.new
 # scene.space_scene
 # scene.print
@@ -273,10 +275,10 @@ end
 # scene = EmojiScene.new
 # scene.forest_scene
 # scene.print
-
 scene = EmojiScene.new
-scene.city_scene
+scene_to_do = scenes.sample
+scene.send(scene_to_do)
 scene.print
-
+puts scene_to_do
 # twit = CustomTwitter.new
 # twit.update(scene.joined_scene)
