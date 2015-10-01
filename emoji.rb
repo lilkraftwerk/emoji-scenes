@@ -78,6 +78,8 @@ class EmojiScene
     @emoji_array = Array.new(10) {Array.new(@LINE_LENGTH, ' ')}
   end
 
+  ## utilities ##
+
   def row(number)
     @emoji_array[number]
   end
@@ -98,7 +100,6 @@ class EmojiScene
 
   def place_in_random_cell(array, emoji)
     return unless array.include?(" ")
-
     slot = EmojiArrayTools.get_random_slot(array)
     array[slot] = emoji
   end
@@ -120,10 +121,7 @@ class EmojiScene
   end
 
   def maybe_add_one_to_row(row_number, emoji)
-    dice = rand(1..6)
-    if dice > 4
-      place_in_random_cell(row(row_number), emoji)
-    end
+    place_in_random_cell(row(row_number), emoji) if rand(1..6) > 4
   end
 
   def fill_row_totally(row_number, emoji_or_category)
@@ -132,19 +130,16 @@ class EmojiScene
   end
 
   def fill_empty_spots(row, emoji)
-    row.each do |slot| 
-      slot = emoji if slot == " "
-    end
+    row.each { |slot| slot = emoji if slot == " " }
   end
 
   def space_scene
-    10.times do |row|
-      fill_row_not_so_randomly(row, :planets_and_stars)
-    end
+    10.times { |row| fill_row_not_so_randomly(row, :planets_and_stars) }
     3.times do 
       place_in_random_cell(row(rand(10)), '🚀')
       place_in_random_cell(row(rand(10)), '🌠')
     end
+
     @emoji_array.each do |array|
       empty = array.each_index.select{|slot| array[slot] == ' '}
       empty.each do |slot| 
@@ -258,27 +253,30 @@ class EmojiScene
   end
 end
 
-scenes = [:space_scene, :ocean_scene, :city_scene, :beach_scene, :forest_scene, :winter_scene]
+def random_scene
+  [
+    :space_scene, 
+    :ocean_scene, 
+    :city_scene, 
+    :beach_scene, 
+    :forest_scene, 
+    :winter_scene
+  ].sample  
+end
 
-# scene = EmojiScene.new
-# scene.space_scene
-# scene.print
+def tweet
+  scene = EmojiScene.new
+  scene.send(random_scene)
+  scene.print
+  puts scene_to_do
+  twit = CustomTwitter.new
+  twit.update(scene.joined_scene)
+end
 
-# scene = EmojiScene.new
-# scene.ocean_scene
-# scene.print
-
-# scene = EmojiScene.new
-# scene.beach_scene
-# scene.print
-
-# scene = EmojiScene.new
-# scene.forest_scene
-# scene.print
-scene = EmojiScene.new
-scene_to_do = scenes.sample
-scene.send(scene_to_do)
-scene.print
-puts scene_to_do
-# twit = CustomTwitter.new
-# twit.update(scene.joined_scene)
+def test_scene(name = :random)
+  name == :random ? scene_to_do = random_scene : scene_to_do = name
+  scene = EmojiScene.new
+  scene.send(scene_to_do)
+  scene.print
+  puts scene_to_do
+end
