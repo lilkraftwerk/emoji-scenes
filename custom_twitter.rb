@@ -1,5 +1,5 @@
 require 'twitter'
-# require_relative 'keys.rb' 
+# require_relative 'keys.rb'
 
 TWITTER_KEY ||= ENV["TWITTER_KEY"]
 TWITTER_SECRET ||= ENV["TWITTER_SECRET"]

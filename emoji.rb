@@ -1,4 +1,5 @@
 require_relative 'custom_twitter'
+require 'pry'
 
 class EmojiArrayTools
 
@@ -70,7 +71,7 @@ end
 
 class EmojiScene
   def initialize
-    @LINE_LENGTH = 10
+    @LINE_LENGTH = 12
     @MODIFIER = @LINE_LENGTH - 5
 
     @dict = EmojiDictionary.new
@@ -239,10 +240,14 @@ class EmojiScene
     make_ocean
   end
 
-  def print
+  def join_array
     @emoji_array.each {|x| p x }
     @emoji_array.map!{|array| array.join("")}
     @emoji_array = @emoji_array.join("\n")
+    @emoji_array.gsub!(" ", " ")
+  end
+
+  def print
     p "*" * 30
     puts @emoji_array
   end
@@ -263,12 +268,21 @@ def random_scene
   ].sample  
 end
 
-def tweet
-  scene_to_do = random_scene
-  scene = EmojiScene.new
-  scene.send(scene_to_do)
+def get_suitable_length_scene
+  length = 690
+  until length <= 140
+    scene_to_do = random_scene
+    scene = EmojiScene.new
+    scene.send(scene_to_do)
+    scene.join_array
+    length = scene.joined_scene.length
+  end
   scene.print
-  puts scene_to_do
+  scene
+end
+
+def tweet
+  scene = get_suitable_length_scene
   twit = CustomTwitter.new
   twit.update(scene.joined_scene)
 end
@@ -277,6 +291,9 @@ def test_scene(name = :random)
   name == :random ? scene_to_do = random_scene : scene_to_do = name
   scene = EmojiScene.new
   scene.send(scene_to_do)
+  scene.join_array
   scene.print
-  puts scene_to_do
+  # puts scene_to_do
+  scene.joined_scene
+  scene.joined_scene.length
 end
