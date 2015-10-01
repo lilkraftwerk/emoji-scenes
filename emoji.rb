@@ -280,5 +280,3 @@ def test_scene(name = :random)
   scene.print
   puts scene_to_do
 end
-
-tweet
