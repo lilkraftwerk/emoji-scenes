@@ -1,5 +1,7 @@
 require_relative 'custom_twitter'
-# require 'pry'
+
+require 'pry'
+
 
 class EmojiArrayTools
 
@@ -85,13 +87,13 @@ class EmojiScene
   end
 
   def ends_are_empty(array)
-    array[7] == " " && array[8] == " " && array[9] == " "
+    array[@LINE_LENGTH - 3] == " " && array[@LINE_LENGTH - 2] == " " && array[@LINE_LENGTH - 1] == " "
   end
 
   def place_in_not_so_random_cell(array, emoji)
     return unless array.include?(" ")
     if ends_are_empty(array)
-      slot = [7, 8, 9].sample
+      slot = [@LINE_LENGTH - 3, @LINE_LENGTH - 2, @LINE_LENGTH - 1].sample
     else
       slot = EmojiArrayTools.get_evenly_distributed_slot(array)
     end
@@ -138,13 +140,6 @@ class EmojiScene
     3.times do 
       place_in_random_cell(row(rand(10)), '🚀')
       place_in_random_cell(row(rand(10)), '🌠')
-    end
-
-    @emoji_array.each do |array|
-      empty = array.each_index.select{|slot| array[slot] == ' '}
-      empty.each do |slot| 
-        array[slot] = '⬛'
-      end
     end
   end
 
@@ -196,14 +191,14 @@ class EmojiScene
   end
 
   def city_scene
-  make_sky
-  fill_row_not_so_randomly(3, :city_buildings)
-  fill_row_not_so_randomly(4, :city_buildings)
-  fill_row_not_so_randomly(5, :side_of_road)
-  fill_row_not_so_randomly(6, :cars)
-  fill_row_not_so_randomly(7, :side_of_road)
-  fill_row_not_so_randomly(8, :city_buildings)
-  fill_row_not_so_randomly(9, :beach_inhabitants)  
+    make_sky
+    fill_row_not_so_randomly(3, :city_buildings)
+    fill_row_not_so_randomly(4, :city_buildings)
+    fill_row_not_so_randomly(5, :side_of_road)
+    fill_row_not_so_randomly(6, :cars)
+    fill_row_not_so_randomly(7, :side_of_road)
+    fill_row_not_so_randomly(8, :city_buildings)
+    fill_row_not_so_randomly(9, :beach_inhabitants)  
   end
 
   def make_forest
@@ -268,10 +263,10 @@ def random_scene
   ].sample  
 end
 
-def get_suitable_length_scene
+def get_suitable_length_scene(scene_to_do = :random)
   length = 690
   until length <= 140
-    scene_to_do = random_scene
+    scene_to_do = random_scene if scene_to_do == :random
     scene = EmojiScene.new
     scene.send(scene_to_do)
     scene.join_array
@@ -297,3 +292,12 @@ def test_scene(name = :random)
   scene.joined_scene
   scene.joined_scene.length
 end
+
+def test_and_tweet_specific_scene(scene_symbol)
+  scene = get_suitable_length_scene(scene_symbol)
+  twit = CustomTwitter.new
+  twit.update(scene.joined_scene)
+end
+
+test_and_tweet_specific_scene(:space_scene)
+
