@@ -90,10 +90,18 @@ class EmojiScene
     array[@LINE_LENGTH - 3] == " " && array[@LINE_LENGTH - 2] == " " && array[@LINE_LENGTH - 1] == " "
   end
 
+  def start_is_empty(array)
+    array[0] == " " && array[1] == " " && array[2] == " "
+  end
+
   def place_in_not_so_random_cell(array, emoji)
     return unless array.include?(" ")
     if ends_are_empty(array)
-      slot = [@LINE_LENGTH - 3, @LINE_LENGTH - 2, @LINE_LENGTH - 1].sample
+      slot = EmojiArrayTools.get_evenly_distributed_slot(array)
+      # slot = [@LINE_LENGTH - 3, @LINE_LENGTH - 2, @LINE_LENGTH - 1].sample
+    elsif start_is_empty(array)
+      slot = EmojiArrayTools.get_evenly_distributed_slot(array)
+      # slot = [0, 1, 2].sample
     else
       slot = EmojiArrayTools.get_evenly_distributed_slot(array)
     end
@@ -136,7 +144,7 @@ class EmojiScene
   end
 
   def space_scene
-    10.times { |row| fill_row_not_so_randomly(row, :planets_and_stars) }
+    10.times { |row| fill_row_slightly(row, :planets_and_stars) }
     3.times do 
       place_in_random_cell(row(rand(10)), '🚀')
       place_in_random_cell(row(rand(10)), '🌠')
@@ -151,11 +159,11 @@ class EmojiScene
   end
 
   def make_beach
-    fill_row_not_so_randomly(5, :beach_plants)
-    fill_row_not_so_randomly(6, :beach_plants)
-    fill_row_not_so_randomly(7, :beach_plants)
-    fill_row_not_so_randomly(8, :beach_plants)
-    fill_row_not_so_randomly(9, :beach_plants)
+    fill_row_slightly(5, :beach_plants)
+    fill_row_slightly(6, :beach_plants)
+    fill_row_slightly(7, :beach_plants)
+    fill_row_slightly(8, :beach_plants)
+    fill_row_slightly(9, :beach_plants)
     fill_row_slightly(5, :beach_inhabitants)
     fill_row_slightly(6, :beach_inhabitants)
     fill_row_slightly(7, :beach_inhabitants)
@@ -203,12 +211,12 @@ class EmojiScene
 
   def make_forest
     fill_row_totally(3, "🗻")
-    fill_row_not_so_randomly(4, :forest_trees)
-    fill_row_not_so_randomly(5, :forest_trees)
-    fill_row_not_so_randomly(6, :forest_trees)
-    fill_row_not_so_randomly(7, :forest_trees)
-    fill_row_not_so_randomly(8, :forest_trees)
-    fill_row_not_so_randomly(9, :forest_trees)
+    fill_row_slightly(4, :forest_trees)
+    fill_row_slightly(5, :forest_trees)
+    fill_row_slightly(6, :forest_trees)
+    fill_row_slightly(7, :forest_trees)
+    fill_row_slightly(8, :forest_trees)
+    fill_row_slightly(9, :forest_trees)
     fill_row_slightly(4, :forest_animals)
     fill_row_slightly(5, :forest_animals)
     fill_row_slightly(6, :forest_animals)
@@ -299,5 +307,4 @@ def test_and_tweet_specific_scene(scene_symbol)
   twit.update(scene.joined_scene)
 end
 
-test_and_tweet_specific_scene(:space_scene)
-
+# test_scene
