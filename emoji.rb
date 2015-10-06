@@ -1,6 +1,5 @@
 require_relative 'custom_twitter'
-
-require 'pry'
+# require 'pry'
 
 
 class EmojiArrayTools
